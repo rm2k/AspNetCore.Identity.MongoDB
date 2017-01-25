@@ -12,7 +12,7 @@ using MongoDB.Bson.Serialization.Conventions;
 
 namespace AspNetCore.Identity.MongoDB
 {
-    public class MongoUserStore<TUser> : 
+    public class MongoUserStore<TUser> :
         IUserStore<TUser>,
         IUserLoginStore<TUser>,
         IUserClaimStore<TUser>,
@@ -35,13 +35,13 @@ namespace AspNetCore.Identity.MongoDB
             MongoConfig.EnsureConfigured();
         }
 
-        public MongoUserStore(IMongoDatabase database, ILoggerFactory loggerFactory) 
-            : this (database, loggerFactory, "users")
+        public MongoUserStore(IMongoDatabase database, ILoggerFactory loggerFactory)
+            : this(database, loggerFactory, "users")
         { }
 
         public MongoUserStore(IMongoDatabase database, ILoggerFactory loggerFactory, string userCollectionName)
         {
-            if(database == null)
+            if (database == null)
             {
                 throw new ArgumentNullException(nameof(database));
             }
@@ -50,7 +50,7 @@ namespace AspNetCore.Identity.MongoDB
             {
                 throw new ArgumentNullException(nameof(loggerFactory));
             }
-            
+
             if (userCollectionName == null)
             {
                 throw new ArgumentNullException(nameof(userCollectionName));
@@ -71,7 +71,7 @@ namespace AspNetCore.Identity.MongoDB
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            await _usersCollection.InsertOneAsync(user, cancellationToken).ConfigureAwait(false);
+            await _usersCollection.InsertOneAsync(user, cancellationToken: cancellationToken).ConfigureAwait(false);
 
             return IdentityResult.Success;
         }
@@ -258,7 +258,7 @@ namespace AspNetCore.Identity.MongoDB
                 throw new ArgumentNullException(nameof(user));
             }
 
-            var logins = user.Logins.Select(login => 
+            var logins = user.Logins.Select(login =>
                 new UserLoginInfo(login.LoginProvider, login.ProviderKey, login.ProviderDisplayName));
 
             return Task.FromResult<IList<UserLoginInfo>>(logins.ToList());
@@ -574,14 +574,14 @@ namespace AspNetCore.Identity.MongoDB
             {
                 throw new ArgumentNullException(nameof(user));
             }
-            
+
             // This method can be called even if user doesn't have an e-mail.
             // Act cool in this case and gracefully handle.
             // More info: https://github.com/aspnet/Identity/issues/645
 
-            if(normalizedEmail != null && user.Email != null)
+            if (normalizedEmail != null && user.Email != null)
             {
-                user.Email.SetNormalizedEmail(normalizedEmail);   
+                user.Email.SetNormalizedEmail(normalizedEmail);
             }
 
             return Task.FromResult(0);
@@ -608,7 +608,7 @@ namespace AspNetCore.Identity.MongoDB
                 throw new ArgumentNullException(nameof(user));
             }
 
-            if(lockoutEnd != null)
+            if (lockoutEnd != null)
             {
                 user.LockUntil(lockoutEnd.Value.UtcDateTime);
             }
@@ -761,7 +761,7 @@ namespace AspNetCore.Identity.MongoDB
                 return EnsureIndicesCreatedImplAsync();
             });
 
-            if(obj != null)
+            if (obj != null)
             {
                 var taskToAwait = (Task)obj;
                 await taskToAwait.ConfigureAwait(false);
