@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace AspNetCore.Identity.MongoDB
 {
-    public class UserClaimsPrincipalFactory<TUser> : IUserClaimsPrincipalFactory<TUser>
+    public class MongoUserClaimsPrincipalFactory<TUser> : IUserClaimsPrincipalFactory<TUser>
         where TUser : class
     {
-        public UserClaimsPrincipalFactory(
+        public MongoUserClaimsPrincipalFactory(
             UserManager<TUser> userManager,
             IOptions<IdentityOptions> optionsAccessor)
         {
