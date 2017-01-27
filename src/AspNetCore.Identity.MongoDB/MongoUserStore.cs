@@ -13,7 +13,6 @@ using MongoDB.Bson.Serialization.Conventions;
 namespace AspNetCore.Identity.MongoDB
 {
     public class MongoUserStore<TUser> :
-        IUserStore<TUser>,
         IUserLoginStore<TUser>,
         IUserClaimStore<TUser>,
         IUserPasswordStore<TUser>,
