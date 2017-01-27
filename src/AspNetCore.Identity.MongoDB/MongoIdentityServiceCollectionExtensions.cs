@@ -39,7 +39,7 @@ namespace AspNetCore.Identity.MongoDB
             services.TryAddSingleton<ILookupNormalizer, UpperInvariantLookupNormalizer>();
             services.TryAddSingleton<IdentityErrorDescriber>();
             services.TryAddSingleton<ISecurityStampValidator, SecurityStampValidator<MongoIdentityUser>>();
-            services.TryAddSingleton<IUserClaimsPrincipalFactory<MongoIdentityUser>, UserClaimsPrincipalFactory<MongoIdentityUser>>();
+            services.TryAddSingleton<IUserClaimsPrincipalFactory<MongoIdentityUser>, MongoUserClaimsPrincipalFactory<MongoIdentityUser>>();
             services.TryAddSingleton<UserManager<MongoIdentityUser>, UserManager<MongoIdentityUser>>();
             services.TryAddScoped<SignInManager<MongoIdentityUser>, SignInManager<MongoIdentityUser>>();
 
