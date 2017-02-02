@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using System.Threading;
 using MongoDB.Driver;
@@ -7,7 +8,6 @@ using AspNetCore.Identity.MongoDB.Models;
 using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
 using MongoDB.Bson.Serialization.Conventions;
 
 namespace AspNetCore.Identity.MongoDB
@@ -23,31 +23,32 @@ namespace AspNetCore.Identity.MongoDB
         IUserPhoneNumberStore<TUser>
         where TUser : MongoIdentityUser
     {
+        [SuppressMessage("ReSharper", "StaticMemberInGenericType")]
         private static bool _initialized = false;
+
+        [SuppressMessage("ReSharper", "StaticMemberInGenericType")]
         private static object _initializationLock = new object();
+
+        [SuppressMessage("ReSharper", "StaticMemberInGenericType")]
         private static object _initializationTarget;
+
         private readonly IMongoCollection<TUser> _usersCollection;
-        private readonly ILogger _logger;
 
         static MongoUserStore()
         {
             MongoConfig.EnsureConfigured();
         }
 
-        public MongoUserStore(IMongoDatabase database, ILoggerFactory loggerFactory)
-            : this(database, loggerFactory, "users")
-        { }
+        public MongoUserStore(IMongoDatabase database)
+            : this(database, Constants.DefaultCollectionName)
+        {
+        }
 
-        public MongoUserStore(IMongoDatabase database, ILoggerFactory loggerFactory, string userCollectionName)
+        public MongoUserStore(IMongoDatabase database, string userCollectionName)
         {
             if (database == null)
             {
                 throw new ArgumentNullException(nameof(database));
-            }
-
-            if (loggerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(loggerFactory));
             }
 
             if (userCollectionName == null)
@@ -56,7 +57,6 @@ namespace AspNetCore.Identity.MongoDB
             }
 
             _usersCollection = database.GetCollection<TUser>(userCollectionName);
-            _logger = loggerFactory.CreateLogger(GetType().Name);
 
             EnsureIndicesCreatedAsync().GetAwaiter().GetResult();
         }
@@ -70,7 +70,8 @@ namespace AspNetCore.Identity.MongoDB
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            await _usersCollection.InsertOneAsync(user, cancellationToken: cancellationToken).ConfigureAwait(false);
+            await _usersCollection.InsertOneAsync(user, cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
 
             return IdentityResult.Success;
         }

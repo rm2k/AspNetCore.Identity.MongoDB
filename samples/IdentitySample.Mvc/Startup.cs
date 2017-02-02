@@ -1,4 +1,3 @@
-using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -10,8 +9,6 @@ using System.IO;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using AspNetCore.Identity.MongoDB;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.DataProtection;
 
 namespace IdentitySample
@@ -58,9 +55,8 @@ namespace IdentitySample
                 var options = provider.GetService<IOptions<MongoDbSettings>>();
                 var client = new MongoClient(options.Value.ConnectionString);
                 var database = client.GetDatabase(options.Value.DatabaseName);
-                var loggerFactory = provider.GetService<ILoggerFactory>();
 
-                return new MongoUserStore<MongoIdentityUser>(database, loggerFactory);
+                return new MongoUserStore<MongoIdentityUser>(database);
             });
 
 
